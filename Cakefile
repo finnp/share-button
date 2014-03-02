@@ -7,7 +7,6 @@ accord = require 'accord'
 stylus = accord.load('stylus')
 axis = require 'axis-css'
 autoprefixer = require 'autoprefixer-stylus'
-uuid = require 'node-uuid'
 monocle = require 'monocle'
 
 # tasks
@@ -49,9 +48,9 @@ class Builder
     @compile_css().then(@compile_js.bind(@))
 
   compile_css: (opts) ->
-    tokens = set_tokens(['selector', 'button_color', 'button_background'])
+    tokens = ['config.selector', "config.ui.button_color", "config.ui.button_background"]
 
-    stylus.renderFile(@css_path, { use: [define_tokens(tokens), axis(), autoprefixer()] })
+    stylus.renderFile(@css_path, { use: [axis(), autoprefixer()] })
       .then((css) ->
           accord.load('minify-css').render(css).then (css) ->
             return "<style>#{replace_tokens(css, tokens)}</style>"
@@ -71,13 +70,9 @@ class Builder
   # @api private
   # 
   
-  set_tokens = (arr) ->
-    arr.reduce(((m,v) -> m[v] = uuid.v1(); m), {})
-
   replace_tokens = (res, tokens) ->
-    for k, v of tokens
-      res = res.replace(new RegExp(v, 'g'), "\"+config.#{k}+\"")
-    return res
+    for token in tokens
+      normalized_token = token.replace(/\./g, "-")
+      res = res.replace(new RegExp(normalized_token, 'g'), "\"+#{token}+\"")
 
-  define_tokens = (tokens) ->
-    return (style) -> style.define(k, v) for k, v of tokens
+    return res
