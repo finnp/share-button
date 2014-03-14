@@ -296,25 +296,3 @@ class Share extends ShareUtils
       delete opts.app_id
 
     return opts
-
-#####################
-
-
-new Share '.share-button-top',
-  ui:
-    button_font: true
-  network:
-    facebook:
-      app_id: 12345
-
-new Share '.share-button-bottom',
-  ui:
-    button_font: true
-    button_text: '12345'
-  network:
-    facebook:
-      app_id: 98765
-      before: ->
-        app_id: 99999
-        url: "http://sharebutton.co/"
-
