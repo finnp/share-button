@@ -266,11 +266,12 @@ class (exports ? this).Share extends ShareUtils
     fn = @config.network[network][type]
 
     if typeof(fn) is "function"
-      opts = fn.call(@config)
-      opts = @normalize_filter_config_updates(opts)
+      opts = fn.call(@config.network[network])
+      unless opts is undefined
+        opts = @normalize_filter_config_updates(opts)
 
-      @extend(@config.network[network], opts, true)
-      @normalize_network_configuration()
+        @extend(@config.network[network], opts, true)
+        @normalize_network_configuration()
 
     return
 

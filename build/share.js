@@ -251,10 +251,12 @@ ShareUtils = (function() {
     var fn, opts;
     fn = this.config.network[network][type];
     if (typeof fn === "function") {
-      opts = fn.call(this.config);
-      opts = this.normalize_filter_config_updates(opts);
-      this.extend(this.config.network[network], opts, true);
-      this.normalize_network_configuration();
+      opts = fn.call(this.config.network[network]);
+      if (opts !== void 0) {
+        opts = this.normalize_filter_config_updates(opts);
+        this.extend(this.config.network[network], opts, true);
+        this.normalize_network_configuration();
+      }
     }
   };
 
