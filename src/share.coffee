@@ -44,7 +44,7 @@ class ShareUtils
 
 #####
 
-class Share extends ShareUtils
+class (exports ? this).Share extends ShareUtils
   constructor: (element, options) ->
     @el =
       head: document.getElementsByTagName('head')[0]
